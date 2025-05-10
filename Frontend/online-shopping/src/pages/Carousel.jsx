@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import carousel1 from "../images/Banner1.jpg";
 import carousel2 from "../images/2image.jpg";
 import carousel3 from "../images/3image.jpg";
@@ -33,11 +34,33 @@ const Carousel = () => {
     }
   ];
 
+  useEffect(() => {
+    // Initialize the carousel with automatic sliding
+    const carousel = document.getElementById('carouselExampleCaptions');
+    if (carousel) {
+      const carouselInstance = new window.bootstrap.Carousel(carousel, {
+        interval: 3000, // Change slide every 3 seconds
+        wrap: true, // Continuous loop
+        keyboard: true, // Enable keyboard navigation
+        pause: 'hover', // Pause on mouse hover
+        touch: true // Enable touch swiping
+      });
+
+      // Cleanup on component unmount
+      return () => {
+        if (carouselInstance) {
+          carouselInstance.dispose();
+        }
+      };
+    }
+  }, []);
+
   return (
     <div
       id="carouselExampleCaptions"
-      className="carousel slide"
+      className="carousel slide carousel-fade"
       data-bs-ride="carousel"
+      data-bs-interval="3000"
     >
       <div className="carousel-indicators">
         {carouselItems.map((_, index) => (
@@ -62,10 +85,15 @@ const Carousel = () => {
               src={item.image}
               className="d-block w-100"
               alt={item.title}
+              style={{
+                objectFit: "cover",
+                height: "500px",
+                filter: "brightness(0.8)"
+              }}
             />
             <div className="carousel-caption">
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
+              <h3 className="display-4 fw-bold mb-3">{item.title}</h3>
+              <p className="lead">{item.description}</p>
             </div>
           </div>
         ))}
